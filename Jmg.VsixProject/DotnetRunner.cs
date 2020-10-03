@@ -11,10 +11,8 @@ namespace Jmg.VsixProject
 	{
 		private const String DotnetExecutableName = "dotnet";
 
-		public static String Run(String fileContents, String workingDirectory, String fileNamespace, String toolName)
+		public static String Run(String fileContents, String workingDirectory, String fileNamespace, String toolName, String baseName, String extension)
 		{
-			var extension = ".cs";
-			var baseName = "BaseName";
 			var args = $"tool run {toolName} --namespace \"{fileNamespace}\" --name \"{baseName}\" --extension \"{extension}\"";
 
 			var processStartInfo = new ProcessStartInfo(fileName: DotnetExecutableName, arguments: args)

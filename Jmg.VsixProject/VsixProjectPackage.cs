@@ -1,4 +1,4 @@
-﻿using Microsoft.VisualStudio.Shell;
+using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 using Microsoft.VisualStudio.TextTemplating.VSHost;
 using System;
@@ -29,7 +29,8 @@ namespace Jmg.VsixProject
     [Guid(VsixProjectPackage.PackageGuidString)]
     [ProvideAutoLoad(UIContextGuids.SolutionExists, PackageAutoLoadFlags.BackgroundLoad)]
     [ProvideCodeGenerator(typeof(CodeGenerator), name: "Jmg.CodeGen", description: "dotnet tool C# Code Generator", generatesDesignTimeSource: true)]
-    public sealed class VsixProjectPackage : AsyncPackage
+    [ProvideCodeGenerator(typeof(CodeGenerator), name: "DotNetCLIToolCsCodeGenerator", description: "dotnet tool C# Code Generator", generatesDesignTimeSource: true)]
+	public sealed class VsixProjectPackage : AsyncPackage
     {
         /// <summary>
         /// Jmg.VsixProjectPackage GUID string.
