@@ -9,13 +9,13 @@ namespace Jmg.VsixProject.Yaml
 {
 	class Spec
 	{
-		[YamlMember(Alias ="files")]
+		[YamlMember(Alias = "files")]
 		public List<File> Files { get; set; }
 	}
 
 	class File
 	{
-		[YamlMember(Alias ="file")]
+		[YamlMember(Alias = "file")]
 		public String FileName { get; set; }
 
 		[YamlMember(Alias = "tool")]
