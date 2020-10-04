@@ -67,15 +67,18 @@ namespace Jmg.VsixProject
 				return new CodeGenResult(message);
 			}
 
-			String toolName;
-			if (metaPath != null)
+			Yaml.Spec spec;
+			if (metaPath == null)
+			{
+				spec = null;
+			}
+			else
 			{
 				var metaContents = File.ReadAllText(metaPath);
 
 				var deserializer = new YamlDotNet.Serialization.DeserializerBuilder()
 					.Build();
 
-				Yaml.Spec spec;
 				try
 				{
 					spec = deserializer.Deserialize<Yaml.Spec>(metaContents);
@@ -87,8 +90,11 @@ namespace Jmg.VsixProject
 					this.GeneratorErrorCallback(false, 0, message, start.Line, start.Column);
 					return new CodeGenResult($"// {message}");
 				}
+			}
 
-				var file = spec.Files.FirstOrDefault(i => i.FileName == fileName);
+			String toolName;
+			if (spec != null && spec.Files.FirstOrDefault(i => i.FileName == fileName) is Yaml.File file)
+			{
 				toolName = file.Tool;
 
 				// Set file extension from config
