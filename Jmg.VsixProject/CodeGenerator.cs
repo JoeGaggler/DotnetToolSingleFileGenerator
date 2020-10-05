@@ -54,12 +54,14 @@ namespace Jmg.VsixProject
 				return new CodeGenResult(message);
 			}
 
-			String metaPath;
+			String metaPath, metaContents;
 			try
 			{
-				metaPath = metaFileNameCandidates
+				(metaPath, metaContents) = metaFileNameCandidates
 					.Select(name => Path.Combine(workingDirectory, name))
-					.FirstOrDefault(path => File.Exists(path));
+					.Where(path => File.Exists(path))
+					.Select(path => (path, File.ReadAllText(path)))
+					.FirstOrDefault();
 			}
 			catch (Exception exc)
 			{
@@ -68,14 +70,12 @@ namespace Jmg.VsixProject
 			}
 
 			Yaml.Spec spec;
-			if (metaPath == null)
+			if (metaContents == null)
 			{
 				spec = null;
 			}
 			else
 			{
-				var metaContents = File.ReadAllText(metaPath);
-
 				var deserializer = new YamlDotNet.Serialization.DeserializerBuilder()
 					.Build();
 
@@ -119,7 +119,7 @@ namespace Jmg.VsixProject
 			}
 			else
 			{
-				return new CodeGenResult($"// Must include a '{metaFileNameCandidates.First()}' file in the same directory as input: {inputFilePath}");
+				return new CodeGenResult($"// Must include a '{metaFileNameCandidates.First()}' file in the same directory as input that references this file: {inputFilePath}");
 			}
 
 			var outputFileContent = DotnetRunner.Run(
