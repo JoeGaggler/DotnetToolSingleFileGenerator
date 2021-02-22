@@ -41,11 +41,14 @@ namespace Jmg.VsixProject
 			{
 				var fileInfo = new FileInfo(inputFilePath);
 				fileName = fileInfo.Name;
+
+				// Base name is commonly used to generate the class name
 				baseName = fileName;
 				while (baseName.Contains("."))
 				{
 					baseName = Path.GetFileNameWithoutExtension(baseName);
 				}
+
 				workingDirectory = fileInfo.Directory.FullName;
 			}
 			catch (Exception exc)
@@ -93,9 +96,11 @@ namespace Jmg.VsixProject
 			}
 
 			String toolName;
+			Boolean isGlobalTool;
 			if (spec != null && spec.Files.FirstOrDefault(i => i.FileName == fileName) is Yaml.File file)
 			{
 				toolName = file.Tool;
+				isGlobalTool = false;
 
 				// Set file extension from config
 				if (!(file.Extension is String fileExtension))
@@ -116,6 +121,7 @@ namespace Jmg.VsixProject
 			{
 				// Legacy assumption
 				this.fileExtension = ".cs";
+				isGlobalTool = true;
 			}
 			else
 			{
@@ -128,7 +134,8 @@ namespace Jmg.VsixProject
 				fileNamespace: fileNamespace,
 				toolName: toolName,
 				baseName: baseName,
-				extension: fileExtension
+				extension: fileExtension,
+				runGlobalTool: isGlobalTool
 				);
 
 			return new CodeGenResult(outputFileContent);

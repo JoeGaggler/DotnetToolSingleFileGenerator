@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011" xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
     <Metadata>
-        <Identity Id="Jmg.VsixProject.ef3054ed-972c-4ed9-b649-75cd3dd37c2d" Version="1.1" Language="en-US" Publisher="JoeGaggler" />
+        <Identity Id="Jmg.VsixProject.ef3054ed-972c-4ed9-b649-75cd3dd37c2d" Version="1.2" Language="en-US" Publisher="JoeGaggler" />
         <DisplayName>Dotnet Tool Single File Generator</DisplayName>
         <Description xml:space="preserve">Single File Generator for Visual Studio that feeds the source file to a dotnet tool in order to produce the target file.</Description>
     </Metadata>
