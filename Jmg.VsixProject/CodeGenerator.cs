@@ -41,11 +41,14 @@ namespace Jmg.VsixProject
 			{
 				var fileInfo = new FileInfo(inputFilePath);
 				fileName = fileInfo.Name;
+
+				// Base name is commonly used to generate the class name
 				baseName = fileName;
 				while (baseName.Contains("."))
 				{
 					baseName = Path.GetFileNameWithoutExtension(baseName);
 				}
+
 				workingDirectory = fileInfo.Directory.FullName;
 			}
 			catch (Exception exc)
@@ -54,12 +57,14 @@ namespace Jmg.VsixProject
 				return new CodeGenResult(message);
 			}
 
-			String metaPath;
+			String metaPath, metaContents;
 			try
 			{
-				metaPath = metaFileNameCandidates
+				(metaPath, metaContents) = metaFileNameCandidates
 					.Select(name => Path.Combine(workingDirectory, name))
-					.FirstOrDefault(path => File.Exists(path));
+					.Where(path => File.Exists(path))
+					.Select(path => (path, File.ReadAllText(path)))
+					.FirstOrDefault();
 			}
 			catch (Exception exc)
 			{
@@ -68,14 +73,12 @@ namespace Jmg.VsixProject
 			}
 
 			Yaml.Spec spec;
-			if (metaPath == null)
+			if (metaContents == null)
 			{
 				spec = null;
 			}
 			else
 			{
-				var metaContents = File.ReadAllText(metaPath);
-
 				var deserializer = new YamlDotNet.Serialization.DeserializerBuilder()
 					.Build();
 
@@ -93,9 +96,11 @@ namespace Jmg.VsixProject
 			}
 
 			String toolName;
+			Boolean isGlobalTool;
 			if (spec != null && spec.Files.FirstOrDefault(i => i.FileName == fileName) is Yaml.File file)
 			{
 				toolName = file.Tool;
+				isGlobalTool = false;
 
 				// Set file extension from config
 				if (!(file.Extension is String fileExtension))
@@ -116,10 +121,11 @@ namespace Jmg.VsixProject
 			{
 				// Legacy assumption
 				this.fileExtension = ".cs";
+				isGlobalTool = true;
 			}
 			else
 			{
-				return new CodeGenResult($"// Must include a '{metaFileNameCandidates.First()}' file in the same directory as input: {inputFilePath}");
+				return new CodeGenResult($"// Must include a '{metaFileNameCandidates.First()}' file in the same directory as input that references this file: {inputFilePath}");
 			}
 
 			var outputFileContent = DotnetRunner.Run(
@@ -128,7 +134,8 @@ namespace Jmg.VsixProject
 				fileNamespace: fileNamespace,
 				toolName: toolName,
 				baseName: baseName,
-				extension: fileExtension
+				extension: fileExtension,
+				runGlobalTool: isGlobalTool
 				);
 
 			return new CodeGenResult(outputFileContent);

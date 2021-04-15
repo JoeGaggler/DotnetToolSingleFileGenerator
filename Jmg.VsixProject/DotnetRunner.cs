@@ -11,9 +11,14 @@ namespace Jmg.VsixProject
 	{
 		private const String DotnetExecutableName = "dotnet";
 
-		public static String Run(String fileContents, String workingDirectory, String fileNamespace, String toolName, String baseName, String extension)
+		public static String Run(String fileContents, String workingDirectory, String fileNamespace, String toolName, String baseName, String extension, Boolean runGlobalTool)
 		{
-			var args = $"tool run {toolName} --namespace \"{fileNamespace}\" --name \"{baseName}\" --extension \"{extension}\"";
+			var args = $"{toolName} --namespace \"{fileNamespace}\" --name \"{baseName}\" --extension \"{extension}\"";
+			if (!runGlobalTool)
+			{
+				// Explicitly call local tool
+				args = "tool run " + args;
+			}
 
 			var processStartInfo = new ProcessStartInfo(fileName: DotnetExecutableName, arguments: args)
 			{
