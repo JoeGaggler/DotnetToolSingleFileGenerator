@@ -134,6 +134,7 @@ namespace Jmg.VsixProject
 				fileNamespace: fileNamespace,
 				toolName: toolName,
 				baseName: baseName,
+				inputFilePath: inputFilePath,
 				extension: fileExtension,
 				runGlobalTool: isGlobalTool
 				);
