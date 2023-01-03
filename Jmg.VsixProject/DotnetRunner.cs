@@ -10,6 +10,7 @@ namespace Jmg.VsixProject
 	static class DotnetRunner
 	{
 		private const String DotnetExecutableName = "dotnet";
+		private const String DotnetNoLogoEnvironmentVariable = "DOTNET_NOLOGO";
 
 		public static String Run(String fileContents, String workingDirectory, String fileNamespace, String toolName, String baseName, String extension, Boolean runGlobalTool, String inputFilePath)
 		{
@@ -32,6 +33,7 @@ namespace Jmg.VsixProject
 				WindowStyle = ProcessWindowStyle.Hidden,
 				WorkingDirectory = workingDirectory
 			};
+			processStartInfo.EnvironmentVariables.Add(DotnetNoLogoEnvironmentVariable, "1"); // Disable dotnet welcome messages
 
 			var process = Process.Start(processStartInfo);
 
