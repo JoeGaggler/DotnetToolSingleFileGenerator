@@ -23,7 +23,6 @@ namespace Jmg.VsixProject
 
 			var processStartInfo = new ProcessStartInfo(fileName: DotnetExecutableName, arguments: args)
 			{
-				RedirectStandardInput = true,
 				RedirectStandardOutput = true,
 				RedirectStandardError = true,
 				CreateNoWindow = true,
@@ -36,11 +35,6 @@ namespace Jmg.VsixProject
 			processStartInfo.EnvironmentVariables.Add(DotnetNoLogoEnvironmentVariable, "1"); // Disable dotnet welcome messages
 
 			var process = Process.Start(processStartInfo);
-
-			using (var writer = process.StandardInput)
-			{
-				process.StandardInput.Write(fileContents);
-			}
 
 			var outputString = process.StandardOutput.ReadToEnd();
 			var errorString = process.StandardError.ReadToEnd();
