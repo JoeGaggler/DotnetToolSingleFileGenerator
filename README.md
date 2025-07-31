@@ -1,3 +1,5 @@
+User ID: e3a102a4-b304-6615-8826-fdd2041ae8c2
+
 # DotnetToolSingleFileGenerator
 
 A Visual Studio extension that invokes a dotnet tool as a code generator, piping a file in the solution as input to the tool and piping the output to a new file in the solution.
